@@ -1,2 +1,2 @@
 # JavaScript-Sort-Compare
-Js sort, Javascript, sort
+Javascript, Sort method, Url params
