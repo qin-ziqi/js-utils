@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>排序算法</title>
+</head>
+
+<body>
+
+    <script>
+        /**
+         * 获取随机数组
+         */
+        function getArray() {
+            const array = [];
+            for (let i = 0; i < 1000; i++) {
+                const num = Math.floor(Math.random() * 1000);
+                array.push(num);
+            }
+            return array;
+        }
+
+        /**
+         * 执行100次所需的总时间
+         * 
+         * @param {string} desc 冒泡算法描述
+         * @param {function} fn 需要执行的冒泡算法
+         */
+        function getAllTime(desc, fn) {
+            console.time(desc);
+            for (let i = 0; i < 100; i++) {
+                const array = getArray();
+                fn(array);
+            }
+            console.timeEnd(desc);
+        }
+
+        /*----- 1.冒泡排序 -----*/
+
+        /**
+         * 初始版冒泡排序
+         * 
+         * @param {array} arr 需要排序的数组
+         */
+        function bubble(arr) {
+            const len = arr.length;
+            for (let i = 0; i < len; i++) {
+                for (let j = 0; j < len; j++) {
+                    if (arr[j] > arr[i]) {
+                        const temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+            }
+        }
+        getAllTime('初始版冒泡排序', bubble);
+
+        /**
+         * 原始版冒泡排序
+         * 
+         * @param {array} arr 需要排序的数组
+         */
+        function bubble1(arr) {
+            const len = arr.length;
+            for (let i = 0; i < len; i++) {
+                for (let j = 0; j < len - 1 - i; j++) {
+                    if (arr[j] > arr[j + 1]) { //相邻元素两两对比 
+                        const temp = arr[j + 1]; //元素交换
+                        arr[j + 1] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+            }
+        }
+        getAllTime('原始版冒泡排序', bubble1);
+
+        /**
+         * 进化版冒泡排序
+         * 
+         * @param {array} arr 需要排序的数组
+         */
+        function bubble2(arr) {
+            let i = arr.length - 1; //初始时，最后位置保持不变
+            while (i > 0) {
+                let pos = 0; //每趟开始时，无记录交换
+                for (let j = 0; j < i; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        pos = j; //记录交换的位置
+                        const temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+                i = pos; //为下一趟排序做准备
+            }
+        }
+        getAllTime('进化版冒泡排序', bubble2);
+
+        /**
+         * 升级版冒泡排序
+         * 
+         * @param {array} arr 需要排序的数组
+         */
+        function bubble3(arr) {
+            let high = arr.length - 1; //设置变量的初始值
+            let low = 0;
+            let temp;
+            let j;
+            while (low < high) {
+                for (j = low; j < high; ++j) { //正向冒泡，找到最大者
+                    if (arr[j] > arr[j + 1]) {
+                        temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+                --high; //修改high的值，前移一位
+                for (j = high; j > low; --j) { //反向冒泡，找到最小值
+                    if (arr[j] < arr[j - 1]) {
+                        temp = arr[j];
+                        arr[j] = arr[j - 1];
+                        arr[j - 1] = temp;
+                    }
+                }
+                ++low; //修改low的值，后移一位
+            }
+        }
+        getAllTime('升级版冒泡排序', bubble3);
+
+        /**
+         * 自创版冒泡排序
+         * 
+         * @param {array} arr 需要排序的数组
+         */
+        function bubble4(arr) {
+            let low = 0;
+            let high = arr.length - 1; //设置变量的初始值
+            let temp;
+            let j;
+            while (low < high) {
+                let pos1 = 0;
+                let pos2 = 0;
+                for (let i = low; i < high; ++i) { //正向冒泡，找到最大值
+                    if (arr[i] > arr[i + 1]) {
+                        temp = arr[i];
+                        arr[i] = arr[i + 1];
+                        arr[i + 1] = temp;
+                        pos1 = i;
+                    }
+                }
+                high = pos1; //记录上次位置
+                for (let j = high; j > low; --j) { //反向冒泡，找到最小值
+                    if (arr[j] < arr[j - 1]) {
+                        temp = arr[j];
+                        arr[j] = arr[j - 1];
+                        arr[j - 1] = temp;
+                        pos2 = j;
+                    }
+                }
+                low = pos2; //修改low值
+            }
+        }
+        getAllTime('自创版冒泡排序', bubble4);
+    </script>
+</body>
+
+</html>
