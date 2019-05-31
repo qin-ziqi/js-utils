@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>excel导入解析</title>
+    <script src="https://cdn.bootcss.com/xlsx/0.14.3/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <h2>excel导入解析</h2>
+    <input type="file" id="upload" />
+    <div id="demo"></div>
+    <script>
+        const flag = true; //是否将文件读取为二进制字符串
+        const upload = document.getElementById('upload');
+        const demo = document.getElementById('demo');
+
+        upload.onchange = event => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+            const reader = new FileReader();
+            const name = file.name;
+
+            reader.onload = e => {
+                const data = e.target.result;
+                let wb;
+                if (flag) {
+                    wb = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                } else {
+                    const arr = fixdata(data);
+                    wb = XLSX.read(btoa(arr), {
+                        type: 'base64'
+                    });
+                }
+                demo.innerHTML = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+            };
+            if (flag) {
+                reader.readAsBinaryString(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function fixdata(data) {
+            let o = "",
+                l = 0,
+                w = 10240;
+            for (; l < data.byteLength / w; ++l) {
+                o += String.fromCharCode.apply(
+                    null,
+                    new Uint8Array(
+                        data.slice(l * w, l * w + w)
+                    )
+                );
+            }
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        }
+    </script>
+</body>
+
+</html>
