@@ -24,6 +24,12 @@
             const reader = new FileReader();
             const name = file.name;
 
+            if (flag) {
+                reader.readAsBinaryString(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+
             reader.onload = e => {
                 const data = e.target.result;
                 let wb;
@@ -39,11 +45,7 @@
                 }
                 demo.innerHTML = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
             };
-            if (flag) {
-                reader.readAsBinaryString(file);
-            } else {
-                reader.readAsArrayBuffer(file);
-            }
+
         }
 
         function fixdata(data) {
