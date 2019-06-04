@@ -9,8 +9,9 @@
 </head>
 
 <body>
+    <h2>js实现文件下载</h2>
     <input type="file" id="upload" />
-    <a href="" id="download" download="data.png">下载</a>
+    <a href="" id="download" download="">下载</a>
 
     <script type="text/javascript">
         const upload = document.getElementById('upload');
@@ -21,8 +22,14 @@
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
+                // 获取base64地址
                 const base64Url = e.target.result;
                 download.setAttribute('href', base64Url);
+                /**
+                 * @desc 设置的下载文件扩展名要和上传的文件相同
+                 * 如上传png格式的图片就要设置成‘xxx.png’,excel--‘xxx.xlsc’,word--‘xxx.doc’等
+                 */
+                download.setAttribute('download', '下载的文件名.png');
             }
         }
     </script>
