@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>excel生成导出</title>
+</head>
+
+<body>
+    <h2>excel生成导出</h2>
+    <button id="btn">导出</button>
+    <script src="https://cdn.bootcss.com/xlsx/0.14.3/xlsx.full.min.js"></script>
+    <!-- 调用FileSaver saveAs函数可以实现文件下载 -->
+    <!-- <script src="https://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.min.js"></script> -->
+    <script>
+        const btn = document.getElementById('btn');
+        const json = [{
+            "长(cm)": "length",
+            "宽(cm)": "width",
+            "高(cm)": 'height',
+            "保质期(天)": 100
+        }, {
+
+            "长(cm)": "length",
+            "宽(cm)": "width",
+            "高(cm)": 'height',
+            "保质期(天)": 100
+        }];
+
+        /**
+         * 这里的数据是用来定义导出的格式类型
+         * 
+         * bookType可选值xlsx/ods/xlsb/fods/biff2
+         */
+        const wopts = {
+            bookType: 'xlsx',
+            bookSST: false,
+            type: 'binary'
+        };
+
+        btn.onclick = () => {
+            const wb = {
+                SheetNames: ['Sheet1'],
+                Sheets: {},
+                Props: {}
+            };
+            wb.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(json); //通过json_to_sheet转成单页(Sheet)数据
+
+            saveAs(new Blob([convert(XLSX.write(wb, wopts))], {
+                type: "application/octet-stream"
+            }), "下载的文件名" + '.' + (wopts.bookType == "biff2" ? "xls" : wopts.bookType));
+        }
+
+        // 引入FileSaver.js时不需要此函数
+        function saveAs(obj, fileName) {
+            const tmpa = document.createElement("a");
+            tmpa.download = fileName || "下载";
+            tmpa.href = URL.createObjectURL(obj);
+            tmpa.click();
+            setTimeout(function () {
+                URL.revokeObjectURL(obj);
+            }, 100);
+        }
+
+        function convert(arr) {
+            if (typeof ArrayBuffer !== 'undefined') {
+                const buf = new ArrayBuffer(arr.length);
+                const view = new Uint8Array(buf);
+                for (let i = 0; i != arr.length; ++i) view[i] = arr.charCodeAt(i) & 0xFF;
+                return buf;
+            } else {
+                const buf = new Array(arr.length);
+                for (let i = 0; i != arr.length; ++i) buf[i] = arr.charCodeAt(i) & 0xFF;
+                return buf;
+            }
+        }
+    </script>
+</body>
+
+</html>
