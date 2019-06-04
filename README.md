@@ -1,4 +1,4 @@
-# JavaScript-Sort
+# JavaScript Method
 
 Javascript, Sort method, Url params, SheetJs
 
