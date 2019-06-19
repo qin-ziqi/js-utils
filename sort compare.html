@@ -1,238 +1,516 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>排序算法比较</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <title>排序算法比较</title>
-</head>
-
-<body>
-    <h2>排序算法比较</h2>
-    <script>
-        const times = 100; //算法重复执行的此属
-        const length = 1000; //算法的数组长度
-        /**
-         * 获取随机数组
-         */
-        function getArray() {
-            const array = [];
-            for (let i = 0; i < length; i++) {
-                const num = Math.floor(Math.random() * length);
-                array.push(num);
+    <body>
+        <h2>排序算法比较</h2>
+        <script>
+            const times = 100; //算法重复执行的此属
+            const length = 1000; //算法的数组长度
+            /**
+             * 获取随机数组
+             */
+            function getArray() {
+                const array = [];
+                for (let i = 0; i < length; i++) {
+                    const num = Math.floor(Math.random() * length);
+                    array.push(num);
+                }
+                return array;
             }
-            return array;
-        }
 
-        /**
-         * 执行100次所需的总时间(减小因随机数组带来的干扰)
-         * 
-         * @param {string} desc 冒泡算法描述
-         * @param {function} fn 需要执行的冒泡算法
-         */
-        function getAllTime(desc, fn) {
-            console.time(desc);
-            for (let i = 0; i < times; i++) {
-                const array = getArray();
-                fn(array);
+            /**
+             * 执行100次所需的总时间(减小因随机数组带来的干扰)
+             *
+             * @param {string} desc 冒泡算法描述
+             * @param {function} fn 需要执行的冒泡算法
+             */
+            function getAllTime(desc, fn) {
+                console.time(desc);
+                for (let i = 0; i < times; i++) {
+                    const array = getArray();
+                    fn(array);
+                }
+                console.timeEnd(desc);
             }
-            console.timeEnd(desc);
-        }
 
-        console.log('/*---------- 1.冒泡排序 ----------*/');
-        /**
-         * 原始版冒泡排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function bubble1(arr) {
-            const len = arr.length;
-            for (let i = 0; i < len; i++) {
-                for (let j = 0; j < len - 1 - i; j++) {
-                    if (arr[j] > arr[j + 1]) { //相邻元素两两对比 
-                        const temp = arr[j + 1]; //元素交换
+            console.log('/*---------- 1.冒泡排序 ----------*/');
+            /**
+             * 初级版冒泡排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function bubbleSort1(arr) {
+                const len = arr.length;
+                for (let i = 0; i < len; i++) {
+                    for (let j = 0; j < len - 1 - i; j++) {
+                        //相邻元素两两对比
+                        if (arr[j] > arr[j + 1]) {
+                            const temp = arr[j + 1]; //元素交换
+                            arr[j + 1] = arr[j];
+                            arr[j] = temp;
+                        }
+                    }
+                }
+                return arr;
+            }
+            getAllTime('初级版冒泡排序', bubbleSort1);
+
+            /**
+             * 改进版冒泡排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function bubbleSort2(arr) {
+                let i = arr.length - 1; //初始时，最后位置保持不变
+                while (i > 0) {
+                    let pos = 0; //每趟开始时，无记录交换
+                    for (let j = 0; j < i; j++) {
+                        if (arr[j] > arr[j + 1]) {
+                            pos = j; //记录交换的位置
+                            const temp = arr[j];
+                            arr[j] = arr[j + 1];
+                            arr[j + 1] = temp;
+                        }
+                    }
+                    i = pos; //为下一趟排序做准备
+                }
+                return arr;
+            }
+            getAllTime('改进版冒泡排序', bubbleSort2);
+
+            /**
+             * 加强版冒泡排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function bubbleSort3(arr) {
+                let high = arr.length - 1; //设置变量的初始值
+                let low = 0;
+                while (low < high) {
+                    let j;
+                    //正向冒泡，找到最大者
+                    for (j = low; j < high; j++) {
+                        if (arr[j] > arr[j + 1]) {
+                            const temp = arr[j];
+                            arr[j] = arr[j + 1];
+                            arr[j + 1] = temp;
+                        }
+                    }
+                    --high; //修改high的值，前移一位
+                    //反向冒泡，找到最小值
+                    for (j = high; j > low; --j) {
+                        if (arr[j] < arr[j - 1]) {
+                            const temp = arr[j];
+                            arr[j] = arr[j - 1];
+                            arr[j - 1] = temp;
+                        }
+                    }
+                    ++low; //修改low的值，后移一位
+                }
+                return arr;
+            }
+            getAllTime('加强版冒泡排序', bubbleSort3);
+
+            /**
+             * 自创版冒泡排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function bubbleSort4(arr) {
+                let low = 0;
+                let high = arr.length - 1; //设置变量的初始值
+                let j;
+                while (low < high) {
+                    let pos1 = 0;
+                    let pos2 = 0;
+                    //正向冒泡，找到最大值
+                    for (let i = low; i < high; ++i) {
+                        if (arr[i] > arr[i + 1]) {
+                            const temp = arr[i];
+                            arr[i] = arr[i + 1];
+                            arr[i + 1] = temp;
+                            pos1 = i;
+                        }
+                    }
+                    high = pos1; //记录上次位置
+                    //反向冒泡，找到最小值
+                    for (let j = high; j > low; --j) {
+                        if (arr[j] < arr[j - 1]) {
+                            const temp = arr[j];
+                            arr[j] = arr[j - 1];
+                            arr[j - 1] = temp;
+                            pos2 = j;
+                        }
+                    }
+                    low = pos2; //修改low值
+                }
+                return arr;
+            }
+            getAllTime('自创版冒泡排序', bubbleSort4);
+
+            console.log('/*---------- 2.选择排序 ----------*/');
+            /**
+             * 初始版选择排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function selectSort1(arr) {
+                const len = arr.length;
+                for (let i = 0; i < len; i++) {
+                    for (let j = i + 1; j < len; j++) {
+                        if (arr[j] < arr[i]) {
+                            const temp = arr[i];
+                            arr[i] = arr[j];
+                            arr[j] = temp;
+                        }
+                    }
+                }
+                return arr;
+            }
+            getAllTime('初始版选择排序', selectSort1);
+
+            /**
+             * 升级版选择排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function selectSort2(arr) {
+                const len = arr.length;
+                let minIndex;
+                for (let i = 0; i < len - 1; i++) {
+                    minIndex = i;
+                    //寻找最小的数
+                    for (let j = i + 1; j < len; j++) {
+                        if (arr[j] < arr[minIndex]) {
+                            minIndex = j; //将最小数的索引保存
+                        }
+                    }
+                    const temp = arr[i];
+                    arr[i] = arr[minIndex];
+                    arr[minIndex] = temp;
+                }
+                return arr;
+            }
+            getAllTime('升级版选择排序', selectSort2);
+
+            console.log('/*---------- 3.插入排序 ----------*/');
+            /**
+             * 初始版插入排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function insertSort1(arr) {
+                const len = arr.length;
+                for (let i = 1; i < len; i++) {
+                    const temp = arr[i];
+                    let j = i - 1;
+                    while (arr[j] > temp) {
                         arr[j + 1] = arr[j];
-                        arr[j] = temp;
+                        j--;
                     }
+                    arr[j + 1] = temp;
                 }
+                return arr;
             }
-        }
-        getAllTime('原始版冒泡排序', bubble1);
+            getAllTime('初始版插入排序', insertSort1);
 
-        /**
-         * 进化版冒泡排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function bubble2(arr) {
-            let i = arr.length - 1; //初始时，最后位置保持不变
-            while (i > 0) {
-                let pos = 0; //每趟开始时，无记录交换
-                for (let j = 0; j < i; j++) {
-                    if (arr[j] > arr[j + 1]) {
-                        pos = j; //记录交换的位置
-                        const temp = arr[j];
-                        arr[j] = arr[j + 1];
-                        arr[j + 1] = temp;
+            /**
+             * 二分法插入排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function insertSort2(arr) {
+                const len = arr.length;
+                for (let i = 1; i < len; i++) {
+                    const temp = arr[i];
+                    let left = 0;
+                    let right = i - 1;
+                    while (left <= right) {
+                        let middle = parseInt((left + right) / 2);
+                        if (temp < arr[middle]) {
+                            right = middle - 1;
+                        } else {
+                            left = middle + 1;
+                        }
                     }
+                    for (let j = i - 1; j >= left; j--) {
+                        arr[j + 1] = arr[j];
+                    }
+                    arr[left] = temp;
                 }
-                i = pos; //为下一趟排序做准备
+                return arr;
             }
-        }
-        getAllTime('进化版冒泡排序', bubble2);
+            getAllTime('二分法插入排序 ', insertSort2);
 
-        /**
-         * 升级版冒泡排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function bubble3(arr) {
-            let high = arr.length - 1; //设置变量的初始值
-            let low = 0;
-            let j;
-            while (low < high) {
-                for (j = low; j < high; ++j) { //正向冒泡，找到最大者
-                    if (arr[j] > arr[j + 1]) {
-                        const temp = arr[j];
-                        arr[j] = arr[j + 1];
-                        arr[j + 1] = temp;
-                    }
+            console.log('/*---------- 4.希尔排序 ----------*/');
+            /**
+             * 希尔排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function shellSort(arr) {
+                const len = arr.length;
+                let gap = 1;
+                //动态定义间隔序列
+                while (gap < len / 5) {
+                    gap = gap * 5 + 1;
                 }
-                --high; //修改high的值，前移一位
-                for (j = high; j > low; --j) { //反向冒泡，找到最小值
-                    if (arr[j] < arr[j - 1]) {
-                        const temp = arr[j];
-                        arr[j] = arr[j - 1];
-                        arr[j - 1] = temp;
-                    }
-                }
-                ++low; //修改low的值，后移一位
-            }
-        }
-        getAllTime('升级版冒泡排序', bubble3);
-
-        /**
-         * 自创版冒泡排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function bubble4(arr) {
-            let low = 0;
-            let high = arr.length - 1; //设置变量的初始值
-            let j;
-            while (low < high) {
-                let pos1 = 0;
-                let pos2 = 0;
-                for (let i = low; i < high; ++i) { //正向冒泡，找到最大值
-                    if (arr[i] > arr[i + 1]) {
+                for (gap; gap > 0; gap = Math.floor(gap / 5)) {
+                    for (let i = gap; i < len; i++) {
                         const temp = arr[i];
-                        arr[i] = arr[i + 1];
-                        arr[i + 1] = temp;
-                        pos1 = i;
+                        let j = i - gap;
+                        for (j; j >= 0 && arr[j] > temp; j -= gap) {
+                            arr[j + gap] = arr[j];
+                        }
+                        arr[j + gap] = temp;
                     }
                 }
-                high = pos1; //记录上次位置
-                for (let j = high; j > low; --j) { //反向冒泡，找到最小值
-                    if (arr[j] < arr[j - 1]) {
-                        const temp = arr[j];
-                        arr[j] = arr[j - 1];
-                        arr[j - 1] = temp;
-                        pos2 = j;
-                    }
-                }
-                low = pos2; //修改low值
+                return arr;
             }
-        }
-        getAllTime('自创版冒泡排序', bubble4);
+            getAllTime('希尔排序 ', shellSort);
 
-        console.log('/*---------- 2.选择排序 ----------*/');
-        /**
-         * 初始版选择排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function select1(arr) {
-            const len = arr.length;
-            for (let i = 0; i < len; i++) {
-                for (let j = i + 1; j < len; j++) {
-                    if (arr[j] < arr[i]) {
-                        const temp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = temp;
-                    }
+            console.log('/*---------- 5.归并排序 ----------*/');
+            /**
+             * 归并排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function mergeSort(arr) {
+                const len = arr.length;
+                if (len < 2) {
+                    return arr;
                 }
+                const middle = Math.floor(len / 2);
+                const left = arr.slice(0, middle);
+                const right = arr.slice(middle);
+                return merge(mergeSort(left), mergeSort(right));
             }
-        }
-        getAllTime('初始版选择排序', select1);
 
-        /**
-         * 升级版选择排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function select2(arr) {
-            const len = arr.length;
-            let minIndex;
-            for (let i = 0; i < len - 1; i++) {
-                minIndex = i;
-                for (let j = i + 1; j < len; j++) {
-                    if (arr[j] < arr[minIndex]) { //寻找最小的数
-                        minIndex = j; //将最小数的索引保存
-                    }
-                }
-                const temp = arr[i];
-                arr[i] = arr[minIndex];
-                arr[minIndex] = temp;
-            }
-        }
-        getAllTime('升级版选择排序', select2);
-
-        console.log('/*---------- 3.插入排序 ----------*/');
-        /**
-         * 初始版插入排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function insert1(arr) {
-            const len = arr.length;
-            for (let i = 1; i < len; i++) {
-                const temp = arr[i];
-                let j = i - 1;
-                while (arr[j] > temp) {
-                    arr[j + 1] = arr[j];
-                    j--;
-                }
-                arr[j + 1] = temp;
-            }
-        }
-        getAllTime('初始版插入排序', insert1);
-
-        /**
-         * 二分法插入排序
-         * 
-         * @param {array} arr 需要排序的数组
-         */
-        function insert2(arr) {
-            const len = arr.length;
-            for (let i = 1; i < len; i++) {
-                const temp = arr[i];
-                let left = 0;
-                let right = i - 1;
-                while (left <= right) {
-                    let middle = parseInt((left + right) / 2);
-                    if (temp < arr[middle]) {
-                        right = middle - 1;
+            function merge(left, right) {
+                const arr = [];
+                while (left.length && right.length) {
+                    if (left[0] <= right[0]) {
+                        arr.push(left.shift());
                     } else {
-                        left = middle + 1;
+                        arr.push(right.shift());
                     }
                 }
-                for (let j = i - 1; j >= left; j--) {
-                    arr[j + 1] = arr[j];
-                }
-                arr[left] = temp;
-            }
-        }
-        getAllTime('二分法插入排序 ', insert2);
-    </script>
-</body>
 
+                while (left.length) arr.push(left.shift());
+
+                while (right.length) arr.push(right.shift());
+                return arr;
+            }
+
+            getAllTime('归并排序 ', mergeSort);
+
+            console.log('/*---------- 6.快速排序 ----------*/');
+            /**
+             * 初级版快速排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function quickSort1(arr) {
+                const len = arr.length;
+                if (len <= 1) return arr;
+                const middle = Math.floor(len / 2);
+                const pivot = arr.splice(middle, 1)[0];
+                const left = [];
+                const right = [];
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i] < pivot) {
+                        left.push(arr[i]);
+                    } else {
+                        right.push(arr[i]);
+                    }
+                }
+                return quickSort1(left).concat([pivot], quickSort1(right));
+            }
+            getAllTime('初级版快速排序 ', quickSort1);
+
+            /**
+             * 改进版快速排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function quickSort2(arr, left = 0, right = arr.length - 1) {
+                if (left < right) {
+                    let x = arr[right];
+                    let i = left - 1;
+                    for (let j = left; j <= right; j++) {
+                        if (arr[j] <= x) {
+                            i++;
+                            const temp = arr[i];
+                            arr[i] = arr[j];
+                            arr[j] = temp;
+                        }
+                    }
+                    quickSort2(arr, left, i - 1);
+                    quickSort2(arr, i + 1, right);
+                }
+                return arr;
+            }
+            getAllTime('改进版快速排序 ', quickSort2);
+
+            console.log('/*---------- 7.堆排序 ----------*/');
+            /**
+             * 堆排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function heapSort(arr) {
+                //建堆
+                let len = arr.length;
+                let i = Math.floor(len / 2) - 1;
+                for (i; i >= 0; i--) {
+                    heapify(arr, i, len);
+                }
+
+                //堆排序
+                for (let j = len - 1; j >= 1; j--) {
+                    const temp = arr[0];
+                    arr[0] = arr[j];
+                    arr[j] = temp;
+                    heapify(arr, 0, --len);
+                }
+                return arr;
+            }
+
+            /**
+             * 维护堆的性质
+             *
+             * @param {array} arr 数组
+             * @param {number} index 数组下标
+             * @param {number} arr 堆大小
+             */
+            function heapify(arr, index, len) {
+                const left = 2 * index + 1;
+                const right = 2 * index + 2;
+                let largest = index;
+                if (left < len && arr[left] > arr[largest]) {
+                    largest = left;
+                }
+                if (right < len && arr[right] > arr[largest]) {
+                    largest = right;
+                }
+                if (largest != index) {
+                    const temp = arr[index];
+                    arr[index] = arr[largest];
+                    arr[largest] = temp;
+                    heapify(arr, largest, len);
+                }
+            }
+            getAllTime('堆排序 ', heapSort);
+
+            console.log('/*---------- 8.计数排序 ----------*/');
+            /**
+             * 计数排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function countingSort(arr) {
+                const len = arr.length;
+                const result = [];
+                const counter = [];
+                let min = (max = arr[0]);
+                for (let i = 0; i < len; i++) {
+                    min = min < arr[i] ? min : arr[i];
+                    max = max > arr[i] ? max : arr[i];
+                    counter[arr[i]] = counter[arr[i]] ? counter[arr[i]] + 1 : 1;
+                }
+                for (let j = min; j < max; j++) {
+                    counter[j + 1] = (counter[j + 1] || 0) + (counter[j] || 0);
+                }
+                for (let k = len - 1; k >= 0; k--) {
+                    result[counter[arr[k]] - 1] = arr[k];
+                    counter[arr[k]]--;
+                }
+                return result;
+            }
+            getAllTime('计数排序 ', countingSort);
+
+            console.log('/*---------- 9.桶排序 ----------*/');
+            /**
+             * 桶排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function bucketSort(arr) {
+                const len = arr.length;
+                const num = 5; //桶的数量
+                if (len <= 1) {
+                    return arr;
+                }
+                const buckets = [];
+                let result = [];
+                let space;
+                let min = (max = arr[0]);
+                let n = 10;
+                for (let i = 1; i < len; i++) {
+                    min = min <= arr[i] ? min : arr[i];
+                    max = max >= arr[i] ? max : arr[i];
+                }
+                space = (max - min + 1) / num;
+                for (let j = 0; j < len; j++) {
+                    const index = Math.floor((arr[j] - min) / space);
+                    //  非空桶，插入排序
+                    if (buckets[index]) {
+                        let k = buckets[index].length - 1;
+                        while (k >= 0 && buckets[index][k] > arr[j]) {
+                            buckets[index][k + 1] = buckets[index][k];
+                            k--;
+                        }
+                        buckets[index][k + 1] = arr[j];
+                    } else {
+                        //空桶，初始化
+                        buckets[index] = [];
+                        buckets[index].push(arr[j]);
+                    }
+                }
+                while (n < num) {
+                    result = result.concat(buckets[n]);
+                    n++;
+                }
+                return result;
+            }
+            getAllTime('桶排序 ', bucketSort);
+
+            console.log('/*---------- 10.基数排序 ----------*/');
+            /**
+             * 基数排序
+             *
+             * @param {array} arr 需要排序的数组
+             */
+            function radixSort(arr) {
+                const maxDigit = 3; //最大位数
+                let mod = 10;
+                let dev = 1;
+                const counter = [];
+                for (let i = 0; i < maxDigit; i++, dev *= 10, mod *= 10) {
+                    for (let j = 0; j < arr.length; j++) {
+                        const bucket = parseInt((arr[j] % mod) / dev);
+                        if (counter[bucket] == null) {
+                            counter[bucket] = [];
+                        }
+                        counter[bucket].push(arr[j]);
+                    }
+                    let pos = 0;
+                    for (let j = 0; j < counter.length; j++) {
+                        let value;
+                        if (counter[j] != null) {
+                            while ((value = counter[j].shift()) != null) {
+                                arr[pos++] = value;
+                            }
+                        }
+                    }
+                }
+                return arr;
+            }
+            getAllTime('基数排序 ', radixSort);
+        </script>
+    </body>
 </html>
