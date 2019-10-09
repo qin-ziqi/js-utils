@@ -1,0 +1,60 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>获取上传图片的原始尺寸</title>
+    </head>
+    <body>
+        <input
+            type="file"
+            id="file"
+            name="file"
+            onchange="handleChange(event)"
+        />
+        <script>
+            function handleChange(e) {
+                const files = e.target.files;
+                const imgUrl = window.URL.createObjectURL(files[0]);
+                const image = new Image();
+                image.src = imgUrl;
+                image.onload = function() {
+                    console.log('width----' + image.width);
+                    console.log('height----' + image.height);
+                };
+            }
+        </script>
+    </body>
+</html> -->
+
+<input id="file" type="file" onchange="check()" />
+<script>
+    function check() {
+        var input = document.getElementById('file');
+        if (input.files) {
+            var f = input.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var image = new Image();
+                image.onload = function() {
+                    var width = image.width;
+                    var height = image.height;
+                    alert(width + '----' + height + '----' + f.size);
+                };
+                image.src = data;
+            };
+            reader.readAsDataURL(f);
+        } else {
+            var image = new Image();
+            image.onload = function() {
+                var width = image.width;
+                var height = image.height;
+                var fileSize = image.fileSize;
+                alert(width + '====' + height + '====' + fileSize);
+            };
+            image.src = input.value;
+        }
+    }
+</script>
