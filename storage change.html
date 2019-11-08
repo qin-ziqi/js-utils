@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>监听localStorage变化</title>
+    </head>
+    <body>
+        <button id="add">add</button>
+        <button id="change">change</button>
+        <button id="delet">delete</button>
+        <script>
+            const orignalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, newValue) {
+                var setItemEvent = new Event('setItemEvent');
+                setItemEvent.key = key;
+                setItemEvent.newValue = newValue;
+                window.dispatchEvent(setItemEvent);
+                orignalSetItem.apply(this, arguments);
+            };
+            window.addEventListener('setItemEvent', e => {
+                if (e.key === 'local') {
+                    const oldValue = localStorage.getItem('local');
+                    if (oldValue && oldValue !== e.newValue) {
+                        alert('local的值从' + oldValue + '变为' + e.newValue);
+                    } else {
+                        alert('local的值初始化为' + e.newValue);
+                    }
+                }
+            });
+
+            const orignalremoveItem = localStorage.removeItem;
+            localStorage.removeItem = function(key, newValue) {
+                const removeItemEvent = new Event('removeItemEvent');
+                removeItemEvent.key = key;
+                removeItemEvent.newValue = newValue;
+                window.dispatchEvent(removeItemEvent);
+                orignalremoveItem.apply(this, arguments);
+            };
+            window.addEventListener('removeItemEvent', e => {
+                console.log(e);
+                if (e.key === 'local') {
+                    if (localStorage.getItem('local')) {
+                        alert('local的值删除成功');
+                    } else {
+                        alert('本地数据无local');
+                    }
+                }
+            });
+
+            // 初始化local值
+            const add = document.getElementById('add');
+            add.onclick = () => {
+                localStorage.setItem('local', 'old');
+            };
+
+            // 更改local值
+            const change = document.getElementById('change');
+            change.onclick = () => {
+                localStorage.setItem('local', 'new');
+            };
+
+            // 删除local值
+            const delet = document.getElementById('delet');
+            delet.onclick = () => {
+                localStorage.removeItem('local');
+            };
+        </script>
+    </body>
+</html>
