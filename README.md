@@ -1,8 +1,4 @@
-# javaScript method
-
-javascript, sort method, url params, sheetJs, download file
-
-## 描述
+## description
 
 自己整理的一些常用的 Js 方法
 
