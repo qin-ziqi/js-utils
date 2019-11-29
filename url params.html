@@ -1,83 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>两种类型的Url参数解析与拼接</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>两种类型的Url参数解析与拼接</title>
-</head>
+    <body>
+        <h2>两种类型的Url参数解析与拼接</h2>
+        <script>
+            const obj = {};
+            const url =
+                'https: //www.baidu.com/order/list?orderStatus=1&orderStatus=2&reviewStatus=0&currentPage=1&pageSize=10&orderBy=id%20desc';
+            // url参数解析
+            if (url.indexOf('?')) {
+                const index = url.indexOf('?');
+                const urlStr = url.substr(index + 1);
+                const urlArr = urlStr.split('&');
 
-<body>
-    <h2>两种类型的Url参数解析与拼接</h2>
-    <script>
-        const obj = {};
-        const url =
-            'https: //www.baidu.com/order/list?orderStatus=1&orderStatus=2&reviewStatus=0&currentPage=1&pageSize=10&orderBy=id%20desc';
-        // url参数解析
-        if (url.indexOf('?')) {
-            const index = url.indexOf('?');
-            const urlStr = url.substr(index + 1);
-            const urlArr = urlStr.split('&');
+                urlArr.forEach(item => {
+                    const i = item.indexOf('=');
+                    const key = item.substring(0, i);
+                    const value = unescape(item.substr(i + 1));
+                    if (obj[key]) {
+                        const a = [...obj[key], value];
+                        obj[key] = a;
+                    } else {
+                        obj[key] = value;
+                    }
+                });
+                console.log(obj);
+            }
 
-            urlArr.forEach(item => {
-                const i = item.indexOf('=');
-                const key = item.substring(0, i);
-                const value = unescape(item.substr(i + 1))
-                if (obj[key]) {
-                    const a = [...obj[key], value];
-                    obj[key] = a;
-                } else {
-                    obj[key] = value;
-                }
-
-            });
+            // url参数拼接
+            const baseUrl = 'https://www.baidu.com/order/list';
+            const urlParams = obj;
+            const arr = [];
+            for (let key in obj) {
+                const str = `${key}=${obj[key]}`;
+                arr.push(str);
+            }
+            const paramsStr = `${baseUrl}?${arr.join('&')}`;
+            console.log(paramsStr);
+        </script>
+        <script>
+            const obj = {};
+            const url =
+                'https://www.baidu.com/order/list?status=1,2,3&type=0&currentPage=1&pageSize=10&orderBy=id';
+            // url参数解析
+            if (url.includes('?')) {
+                const index = url.indexOf('?');
+                const paramsUrl = url.substr(index + 1);
+                const paramsArr = paramsUrl.split('&');
+                paramsArr.forEach(item => {
+                    const i = item.indexOf('=');
+                    if (i) {
+                        const key = item.substr(0, i);
+                        const value = item.substr(i + 1);
+                        if (value.includes(',')) {
+                            // array
+                            obj[key] = value.split(',');
+                        } else {
+                            // string
+                            obj[key] = decodeURIComponent(value);
+                        }
+                    } else {
+                        // bool
+                        const key = item;
+                        obj[key] = true;
+                    }
+                });
+            }
             console.log(obj);
-        }
 
-        // url参数拼接
-        const baseUrl = 'https://www.baidu.com/order/list';
-        const urlParams = obj;
-        const arr = [];
-        for (let key in obj) {
-            const str = `${key}=${obj[key]}`;
-            arr.push(str);
-        }
-        const paramsStr = `${baseUrl}?${arr.join('&')}`;
-        console.log(paramsStr);
-    </script>
-    <script>
-        const obj = {};
-        const url = 'https://www.baidu.com/order/list?status=1,2,3&type=0&currentPage=1&pageSize=10&orderBy=id';
-        // url参数解析
-        if (url.includes('?')) {
-            const index = url.indexOf('?');
-            const paramsUrl = url.substr(index + 1);
-            const paramsArr = paramsUrl.split('&');
-            paramsArr.forEach(item => {
-                const i = item.indexOf('=');
-                const key = item.substr(0, i);
-                const value = item.substr(i + 1);
-                if (value.includes(',')) {
-                    obj[key] = value.split(',');
-                } else {
-                    obj[key] = value;
-                }
-            });
-        }
-        console.log(obj);
-
-        // url参数拼接
-        const baseUrl = 'https://www.baidu.com/order/list';
-        const urlParams = obj;
-        const arr = [];
-        for (const key in obj) {
-            const str = `${key}=${obj[key]}`;
-            arr.push(str);
-        }
-        const paramsStr = `${baseUrl}?${arr.join('&')}`;
-        console.log(paramsStr);
-    </script>
-</body>
-
+            // url参数拼接
+            const baseUrl = 'https://www.baidu.com/order/list';
+            const urlParams = obj;
+            const arr = [];
+            for (const key in obj) {
+                const str = `${key}=${encodeURIComponent(obj[key])}`;
+                arr.push(str);
+            }
+            const paramsStr = `${baseUrl}?${arr.join('&')}`;
+            console.log(paramsStr);
+        </script>
+    </body>
 </html>
