@@ -21,13 +21,19 @@
 
                 urlArr.forEach(item => {
                     const i = item.indexOf('=');
-                    const key = item.substring(0, i);
-                    const value = unescape(item.substr(i + 1));
-                    if (obj[key]) {
-                        const a = [...obj[key], value];
-                        obj[key] = a;
+
+                    if (i) {
+                        const key = item.substring(0, i);
+                        const value = decodeURIComponent(item.substr(i + 1));
+                        if (obj[key]) {
+                            const a = [...obj[key], value];
+                            obj[key] = a;
+                        } else {
+                            obj[key] = value;
+                        }
                     } else {
-                        obj[key] = value;
+                        const key = item;
+                        obj[key] = true;
                     }
                 });
                 console.log(obj);
@@ -38,11 +44,12 @@
             const urlParams = obj;
             const arr = [];
             for (let key in obj) {
-                const str = `${key}=${obj[key]}`;
+                const str = `${key}=${encodeURIComponent(obj[key])}`;
                 arr.push(str);
             }
             const paramsStr = `${baseUrl}?${arr.join('&')}`;
             console.log(paramsStr);
+            console.log(url);
         </script>
         <script>
             const obj = {};
