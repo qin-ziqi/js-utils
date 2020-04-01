@@ -16,4 +16,6 @@ download file: js实现文件下载功能
 upload image: 上传图片时获取图片的原始尺寸和大小
 
 storage change： 本地监控localStorage(sessionStorage)变化
+
+async load img： 使用promise实现图片异步加载状态判断
 ```
