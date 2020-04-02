@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>MutationObserver监听DOM树变化</title>
+    </head>
+    <body>
+        <h2>MutationObserver监听DOM树变化</h2>
+        <div id="target">
+            <div id="child"></div>
+        </div>
+        <script>
+            const targetNode = document.getElementById('target');
+            const options = {
+                childList: true,
+                subtree: true,
+                attributes: true,
+            };
+            const mutationObserver = new MutationObserver(getTargetNodes);
+            mutationObserver.observe(targetNode, options);
+
+            function getTargetNodes(mutationsList) {
+                console.log(mutationsList);
+            }
+
+            const nodes = document.createElement('BUTTON');
+            setInterval(() => {
+                targetNode.appendChild(nodes);
+            }, 5000);
+        </script>
+    </body>
+</html>
