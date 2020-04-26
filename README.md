@@ -20,4 +20,6 @@ storage change:  本地监控localStorage(sessionStorage)变化
 async load img:  使用promise实现图片异步加载状态判断
 
 mutation observer:  使用mutation observer监听Dom树变化
+
+time out: setTimeout实现定时器校准
 ```
