@@ -2,7 +2,7 @@
 
 自己整理的一些常用的 Js 方法
 
-```
+```说明
 url params:  两种url参数的解析与拼接
 
 sort compare:  js的十种排序算法比较
