@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>js实现html文件的下载</title>
+    </head>
+    <body>
+        <h2>js实现html文件的下载</h2>
+        <div id="download">
+            <style>
+                span {
+                    color: green;
+                }
+            </style>
+            <div style="color: red">
+                123
+                <span>456</span>
+                789
+            </div>
+        </div>
+
+        <a href="#" download="index.html">下载</a>
+        <script>
+            document.querySelector('a').onclick = function() {
+                var v = document.querySelector('#download').innerHTML;
+                var b = new Blob([v]);
+                var href = URL.createObjectURL(b);
+                this.href = href;
+            };
+        </script>
+    </body>
+</html>
