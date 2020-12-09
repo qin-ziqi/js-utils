@@ -24,4 +24,6 @@ mutation observer:  使用mutation observer监听Dom树变化
 time out: setTimeout实现定时器校准
 
 download html: js实现html文件下载
+
+copy: 点击复制
 ```

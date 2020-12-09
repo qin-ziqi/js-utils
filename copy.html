@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>点击复制</title>
+</head>
+<body>
+        <h2>点击复制</h2>
+
+        <button onclick="copyStr('ABCDEFGHIJKLMN')">复制</button>
+
+        <input type="text">
+        
+        <script>
+        function copyStr(val) {
+            var input = document.createElement("input");
+            input.value = val;
+            input.readOnly = true
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, input.value.length)
+            document.execCommand('Copy');
+            document.body.removeChild(input);
+            window.scrollTo(0, 0)
+            alert('复制成功')
+        }
+        </script>
+</body>
+</html>
