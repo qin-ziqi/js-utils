@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>防抖与节流的实现</title>
+    </head>
+    <body>
+        <h2>防抖与节流的实现</h2>
+        <input type="text" id="txt" />
+        <script>
+            /**
+             * 防抖-执行最后一次
+             * @desc 动作发生一定时间后触发事件，在等待时间内重发发生该动作，则重新等待后触发事件
+             * @params { function } func 要执行的回调函数
+             * @params { number } time 等待的时间
+             */
+            function debounce(func, time) {
+                let timer = null;
+                return () => {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        func.apply(this, arguments);
+                    }, time);
+                };
+            }
+
+            /**
+             * 节流-执行第一次
+             * @desc 动作发生一段时间后触发事件，在这段时间内动作重复发生，则无视该动作，直到事件执行完
+             * @params { function } func 要执行的回调函数
+             * @params { number } time 等待的时间
+             */
+            function throttle(func, time) {
+                let activeTime = 0;
+                return () => {
+                    const current = Date.now();
+                    if (current - activeTime > time) {
+                        func.apply(this, arguments);
+                        activeTime = Date.now();
+                    }
+                };
+            }
+
+            const txt = document.getElementById('txt');
+
+            function log() {
+                console.log(txt.value);
+            }
+
+            txt.oninput = debounce(log, 1000);
+        </script>
+    </body>
+</html>

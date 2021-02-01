@@ -26,4 +26,6 @@ time out: setTimeout实现定时器校准
 download html: js实现html文件下载
 
 copy: 点击复制
+
+debounce and throttle：防抖与节流的实现
 ```
