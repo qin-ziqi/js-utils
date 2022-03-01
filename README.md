@@ -28,4 +28,6 @@ download html: js实现html文件下载
 copy: 点击复制
 
 debounce and throttle：防抖与节流的实现
+
+aes gcm：AES GCM模式加密实现
 ```
