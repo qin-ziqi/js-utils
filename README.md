@@ -30,4 +30,6 @@ copy: 点击复制
 debounce and throttle：防抖与节流的实现
 
 aes gcm：AES GCM模式加密实现
+
+horizontal and vertical：基于Echart的横屏和竖屏的实现
 ```

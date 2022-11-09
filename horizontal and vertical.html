@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>基于echart的横屏和竖屏实现</title>
+        <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100vw;
+                height: 250px;
+                background: red;
+                position: absolute;
+            }
+
+            body {
+                position: relative;
+                overflow: hidden;
+            }
+
+            #horizontal {
+                position: absolute;
+                top: 300px;
+            }
+
+            #vertical {
+                position: absolute;
+                top: 350px;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>两种类型的Url参数解析与拼接</h2>
+        <div id="container" class="container"></div>
+
+        <div id="horizontal">横屏</div>
+        <div id="vertical">竖屏</div>
+        <script type="text/javascript">
+            const horizontal = document.getElementById('horizontal');
+            horizontal.onclick = function () {
+                const container = document.getElementById('container');
+                var width = document.documentElement.clientWidth;
+                var height = document.documentElement.clientHeight;
+                container.style.width = height + 'px';
+                container.style.height = width + 'px';
+                container.style.top = (height - width) / 2 + 'px';
+                container.style.left = 0 - (height - width) / 2 + 'px';
+                container.style.transform = 'rotate(90deg)';
+                container.style.transformOrigin = '50% 50%';
+                init();
+            };
+
+            const vertical = document.getElementById('vertical');
+            vertical.onclick = function () {
+                const container = document.getElementById('container');
+                container.style = {};
+                init();
+            };
+
+            var myChart;
+
+            const init = function () {
+                if (myChart) {
+                    myChart.dispose();
+                }
+                var chartDom = document.getElementById('container');
+                myChart = echarts.init(chartDom);
+                var option;
+
+                let base = +new Date(1968, 9, 3);
+                let oneDay = 24 * 3600 * 1000;
+                let date = [];
+                let data = [];
+                for (let i = 1; i < 300; i++) {
+                    var now = new Date((base += oneDay));
+                    date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+                    data.push(Math.round((Math.random() - 0.5) * 100 + 100));
+                }
+                option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function (pt) {
+                            return [pt[0], '10%'];
+                        },
+                    },
+                    title: {},
+                    xAxis: {
+                        boundaryGap: false,
+                        data: date,
+                        axisLabel: {
+                            show: false,
+                        },
+                    },
+                    yAxis: {
+                        axisLabel: {
+                            show: false,
+                        },
+                    },
+                    series: [
+                        {
+                            name: '最新价',
+                            type: 'line',
+                            symbol: 'none',
+                            data: data,
+                        },
+                    ],
+                };
+
+                option && myChart.setOption(option);
+            };
+
+            init();
+        </script>
+    </body>
+</html>
